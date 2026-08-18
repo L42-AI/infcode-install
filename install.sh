@@ -80,7 +80,14 @@ EOF
 # True when this script runs from inside a checkout: install.sh lives at the
 # repo root, so bin/infcode and .git must be its siblings. A .git file (not
 # just a directory) is accepted so worktrees and submodules also match.
+# When the script is PIPED (curl | bash), BASH_SOURCE[0] is "bash" — there is
+# no script path — so SCRIPT_DIR would resolve to $PWD; the fast path is
+# skipped in that case and the package is cloned normally instead.
 already_in_repo() {
+    case "${BASH_SOURCE[0]}" in
+        */*) ;;
+        *) return 1 ;;
+    esac
     [ -f "$SCRIPT_DIR/bin/infcode" ] && [ -e "$SCRIPT_DIR/.git" ]
 }
 

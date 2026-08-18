@@ -84,7 +84,7 @@ EOF
 # no script path — so SCRIPT_DIR would resolve to $PWD; the fast path is
 # skipped in that case and the package is cloned normally instead.
 already_in_repo() {
-    case "${BASH_SOURCE[0]}" in
+    case "${BASH_SOURCE[0]:-}" in
         */*) ;;
         *) return 1 ;;
     esac
@@ -280,7 +280,7 @@ EOF
 # --- entry point --------------------------------------------------------------
 
 main() {
-    SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+    SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]:-}")" && pwd)"
 
     case "${1:-}" in
         -h|--help) usage; return 0 ;;
